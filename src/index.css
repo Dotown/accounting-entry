@@ -1,0 +1,25 @@
+#header{
+	width: 100%;
+	border-bottom: 1px solid #eeeeee;
+	height: 50px;
+	box-sizing: border-box;
+	background:white;
+}
+#nav{
+    width: 1200px;
+    margin: 0 auto;
+}
+#nav li{
+    float: left;
+    background: white;
+	width: 100px;
+    display: block;
+    text-align: center;
+    line-height: 50px;
+}
+#nav a{
+    color: gray;
+}
+#nav a:hover{
+    color: red
+}
