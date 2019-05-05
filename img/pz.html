@@ -10,19 +10,50 @@
     <title>Document</title>
     <style>
     #main{
-        width: 1100px;
+        width: 500px;
         margin: 0 auto;
     }
     #upside{
-        height: 200px;
+        height: 150px;
         margin: 20px 
     }
     #downside{
-        height: 200px;
+        height: 150px;
         margin: 20px 
     }
+    #jd{
+        margin: 10px 0;
+    }
+    #je{
+        margin: 10px 0;
+    }
+    #dataside{
+        margin: 20px ;
+    }
+    #but{
+        margin: 0 200px;
+    }
     </style>
-
+    <script>
+    function check(foam){
+        if(foam.zy1.value.length == 0||foam.zy2.value.length == 0){
+            alert('请输入摘要')
+            return false;
+        }else if(foam.sty1.value == foam.sty2.value){
+            alert("有借必有贷")
+            return false;  
+        }else if(isNaN(foam.insty1.value)||isNaN(foam.lainsty1.value)||isNaN(foam.insty2.value)||isNaN(foam.lainsty2.value)){
+            alert('请选择科目');
+            return false;
+        }else if(foam.je1.value.length == 0){
+            alert('请输入借贷金额')
+            return false;
+        }else if((foam.je1.value !== foam.je2.value)){
+            alert('借贷金额不相等')
+            return false;
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -40,35 +71,53 @@
             </ul>
         </div>
         <div id="main">
-            <div id="upside">
-                <div id="zy">摘要：
-                    <input type="text">
+            <form action="pz.php" method="post" onsubmit="return check(this)">
+                <div id="upside">
+                    <div id="zy">摘要：
+                        <input type="text" name="zy1">
+                    </div>
+                    <div id="jd">借贷：
+                            <select name='sty1' id='sty'>
+                                    <option value ="0" >借</option>
+                                    <option value ="1" >贷</option>
+                            </select>
+                    </div>
+                    <div id="km">科目：
+                        <select id="insty1" onchange="insty_change(this)"></select>
+                        <select name="lainsty1" id="lainsty1"></select>
+                    </div>
+                    <div id="je">金额：
+                        <input type="number" step="0.01" name="je1">
+                    </div>
                 </div>
-                <div id="jd">借贷：
-                        <select class='sty1' id='sty1'>
-                                <option value ="0" >借</option>
-                                <option value ="1" >贷</option>
-                        </select>
+                <div id="downside" >
+                    <div id="zy">摘要：
+                            <input type="text" name="zy2">
+                        </div>
+                        <div id="jd">借贷：
+                                <select name='sty2' id='sty'>
+                                        <option value ="0" >借</option>
+                                        <option value ="1" >贷</option>
+                                </select>
+                        </div>
+                        <div id="km">科目：
+                            <select id="insty2" onchange="insty_change2(this)"></select>
+                            <select name="lainsty2" id="lainsty2" value="0"></select>
+                        </div>
+                        <div id="je">金额：
+                            <input type="text" name="je2">
+                        </div>
                 </div>
-                <div id="km">科目：
-                    <select id="insty1" onchange="insty_change(this)"></select>
-                    <select id="lainsty1"></select>
+                <div id="dataside">日期：
+                    <input type="date" name="date" />
                 </div>
-                <div id="je">金额：
-                    <input type="text">
-                </div>
-            </div>
-
-            <div id="downside" >
-                    <select class='sty2' id='sty2'>
-                            <option value ="0" >借</option>
-                            <option value ="1" >贷</option>
-                    </select>
-            </div>
+                <div id="but">
+                    <input type="submit" value="提交">
+                </div> 
+            </form>
         </div>
     </div>
 </body>
-
 <script>
     var data = {
         insty:[{
@@ -99,11 +148,13 @@
         init_style();
       })
     function init_style(){
-         $("#lainsty1").empty();
+         $("#lainsty").empty();
          $("#insty1").append(" <option>请选择科目</option>");
+         $("#insty2").append(" <option>请选择科目</option>"); 
          var kemu = data.insty;
          for(var i=0;i<kemu.length;i++){
             $("#insty1").append("<option value='" + kemu[i].id + "'>"+ kemu[i].name +"</option>");
+            $("#insty2").append("<option value='" + kemu[i].id + "'>"+ kemu[i].name +"</option>");  
         }
     }
     function insty_change(obj){
@@ -117,6 +168,19 @@
             var clainstyId = v[0];
             var lainstyName = v[1];
             $("#lainsty1").append("<option value='" + clainstyId + "'>"+ lainstyName +"</option>");
+        }
+    }
+    function insty_change2(obj){
+        $("#lainsty2").empty();
+        var value = obj.value;
+        var lainstydata = data["lainsty"][value];
+        var lainsty = lainstydata.split(",");
+        $("#lainsty2").append("<option>---请选择---</option>");
+        for(var i =0;i<lainsty.length;i++){
+            var v = lainsty[i].split("#");
+            var clainstyId = v[0];
+            var lainstyName = v[1];
+            $("#lainsty2").append("<option value='" + clainstyId + "'>"+ lainstyName +"</option>");
         }
     }
 </script>
